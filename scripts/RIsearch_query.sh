@@ -17,6 +17,9 @@ cat $2 $2.200Shuffled.fasta > $2.Native.200Shuffled.fasta;
 
 RIsearch -q $1 -t $2.Native.200Shuffled.fasta -p2 -d 30 > $1.$2.RIsearch.result.txt;
 
+cat $1.$2.RIsearch.result.txt | awk '{print $1"\t"$4"\t"$8}' > $1.$2.RIsearch.result.csv;
+
+
 
 
 
