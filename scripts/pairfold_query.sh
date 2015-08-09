@@ -15,7 +15,7 @@
 
 if [ ! -f $2.200Shuffled.fasta ]; then esl-shuffle -N 200 -d --seed 255 $2 > $2.200Shuffled.fasta; fi
 
-cat $2 $2.200Shuffled.fasta > $2.Native.200Shuffled.fasta;
+if [ ! -f $2.Native.200Shuffled.fasta ]; then cat $2 $2.200Shuffled.fasta > $2.Native.200Shuffled.fasta; fi
 
 
-RNAxfold_parser.py -s $1 -targetRNA $2.Native.200Shuffled.fasta > $1.$2.pairfold.result.txt;
+RNAxfold_parser.py -s $1 -targetRNA $2.Native.200Shuffled.fasta > $1.$2.pairfold.result.csv;
