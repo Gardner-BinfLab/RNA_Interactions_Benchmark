@@ -10,12 +10,17 @@
 # $2 Target file
 
 
+program="RNAhybrid"
 
-if [ ! -f $2.200Shuffled.fasta ]; then esl-shuffle -N 200 -d --seed 255 $2 > $2.200Shuffled.fasta; fi
+esl-shuffle -N 200 -d --seed 255 $2 > $1.$2.$program.200Shuffled.fasta
 
-cat $2 $2.200Shuffled.fasta > $2.Native.200Shuffled.fasta;
+cat $2 $1.$2.$program.200Shuffled.fasta > $1.$2.$program.Native.200Shuffled.fasta
 
 
-RNAhybrid -t $2.Native.200Shuffled.fasta -q $1 -d 0 1 -n 1000 -m 10000 > $1.$2.RNAhybrid.result.txt;
 
-grep -e "target:\|miRNA :\|mfe:" $1.$2.RNAhybrid.result.txt | awk '{if(/target/) t=$2; else if (/miRNA/) m=$3; else if(/mfe/) print t,m,$2;}' >  $1.$2.RNAhybrid.result.csv;
+
+
+
+RNAhybrid -t $1.$2.$program.Native.200Shuffled.fasta -q $1 -d 0 1 -n 1000 -m 10000 > $1.$2.RNAhybrid.result.txt;
+
+grep -e "target:\|miRNA :\|mfe:" $1.$2.RNAhybrid.result.txt | awk '{if(/target/) t=$2; else if (/miRNA/) m=$3; else if(/mfe/) print t"\t"m"\t"$2;}' >  $1.$2.RNAhybrid.result.csv;

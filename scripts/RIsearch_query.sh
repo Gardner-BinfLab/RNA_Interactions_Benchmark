@@ -10,11 +10,15 @@
 # $2 Target file
 
 
-if [ ! -f $2.200Shuffled.fasta ]; then esl-shuffle -N 200 -d --seed 255 $2 > $2.200Shuffled.fasta; fi
+program="RIsearch"
 
-if [ ! -f $2.Native.200Shuffled.fasta ]; then cat $2 $2.200Shuffled.fasta > $2.Native.200Shuffled.fasta; fi
 
-RIsearch -q $1 -t $2.Native.200Shuffled.fasta -p2 -d 30 > $1.$2.RIsearch.result.txt;
+esl-shuffle -N 200 -d --seed 255 $2 > $1.$2.$program.200Shuffled.fasta
+
+cat $2 $1.$2.$program.200Shuffled.fasta > $1.$2.$program.Native.200Shuffled.fasta
+
+
+RIsearch -q $1 -t $1.$2.$program.Native.200Shuffled.fasta -p2 -d 30 > $1.$2.RIsearch.result.txt;
 
 cat $1.$2.RIsearch.result.txt | awk '{print $1"\t"$4"\t"$8}' > $1.$2.RIsearch.result.csv;
 
