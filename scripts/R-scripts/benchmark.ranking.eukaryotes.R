@@ -4,65 +4,142 @@ require("pracma")
 
 tools=c("RIsearch","IntaRNA","RNAplex","RNAcofold","pairfold","RNAup","RNAduplex","RNAhybrid","bifold","DuplexFold","ssearch36")
 
-significant_count=function(df){
+TPR_calculate_full=function(df){
   
-  return(c(as.numeric(table(df$V1 <0.05)['TRUE'])/length(df$V1),as.numeric(table(df$V2 <0.05)['TRUE'])/length(df$V2)))
-  
-}
-
-overall_significant_count=function(df){
-  
-  df=rbind(df[[1]],df[[2]],df[[3]])
-  return(c(as.numeric(table(df$V1 <0.05)['TRUE'])/length(df$V1),as.numeric(table(df$V2 <0.05)['TRUE'])/length(df$V2)))
+  return(c(as.numeric(table(df$P.Gumb <0.05)['TRUE'])/length(df$P.Gumb),as.numeric(table(df$P.Norm <0.05)['TRUE'])/length(P.Norm)))
   
 }
 
-
-read_results_mirna=function(species,tool) {
-  return(read.table(paste0("/home/suu13/projects/benchmark/eukaryotes/results/",species,".miRNA.",tool,".results.csv")))
+TPR_calculate=function(df){
+  
+  return(as.numeric(table(df$P.Norm <0.05)['TRUE'])/length(df$P.Norm))
   
 }
 
-read_results_sirna=function(species,tool) {
-  return(read.table(paste0("/home/suu13/projects/benchmark/eukaryotes/results/",species,".siRNA.",tool,".results.csv")))
+PPV_calculate=function(result_list){
+  
+  df=do.call(rbind,result_list)
+  return(c(as.numeric(table(df$P.Norm <0.05)['TRUE'])/sum(df$Norm.FP)))
   
 }
 
-read_results_pirna=function(species,tool) {
-  return(read.table(paste0("/home/suu13/projects/benchmark/eukaryotes/results/",species,".piRNA.",tool,".results.csv")))
+overall_TPR_calculate=function(result_list){
+  
+  df=do.call(rbind,result_list)
+  return(c(as.numeric(table(df$P.Norm <0.05)['TRUE'])/length(df$P.Norm)))
   
 }
 
-species_list_mirna=c("elegans","human","arabidopsis")
+
+read_results_generic=function(species,tool) {
+  df=read.table(paste0("/home/suu13/projects/benchmark/eukaryotes/results/",species,tool,".results.csv"))
+  colnames(df)=c("P.Gumb","P.Norm","Rank","Z.score","Gum.FP","Norm.FP")
+  return(df)
+  
+}
 
 
-RIsearch.results=lapply(species_list_mirna,read_results_mirna,tool="RIsearch")
-IntaRNA.results=lapply(species_list_mirna,read_results_mirna,tool="IntaRNA")
-RNAplex.results=lapply(species_list_mirna,read_results_mirna,tool="RNAplex")
-RNAcofold.results=lapply(species_list_mirna,read_results_mirna,tool="RNAcofold")
-Pairfold.results=lapply(species_list_mirna,read_results_mirna,tool="pairfold")
-RNAup.results=lapply(species_list_mirna,read_results_mirna,tool="RNAup")
-RNAduplex.results=lapply(species_list_mirna,read_results_mirna,tool="RNAduplex")
-RNAhybrid.results=lapply(species_list_mirna,read_results_mirna,tool="RNAhybrid")
-bifold.results=lapply(species_list_mirna,read_results_mirna,tool="bifold")
-DuplexFold.results=lapply(species_list_mirna,read_results_mirna,tool="DuplexFold")
-ssearch.results=lapply(species_list_mirna,read_results_mirna,tool="ssearch36")
+species_list_mirna=c("elegans.miRNA.","human.miRNA.","arabidopsis.miRNA.")
+species_list_snRNA=c("elegans.snRNA.","human.snRNA.","arabidopsis.snRNA.","yeast.snRNA.")
+species_list_pirna=c("mouse.piRNA.")
+species_list_snoRNA=c("elegans.snoRNA.","human.snoRNA.","arabidopsis.snoRNA.","yeast.snoRNA.")
+
+RIsearch.results=c(sapply(species_list_mirna,read_results_generic,tool="RIsearch",USE.NAMES=T,simplify = F),
+                   sapply(species_list_snRNA,read_results_generic,tool="RIsearch",USE.NAMES=T,simplify = F),
+                    sapply(species_list_pirna,read_results_generic,tool="RIsearch",USE.NAMES=T,simplify = F),  
+                    sapply(species_list_snoRNA,read_results_generic,tool="RIsearch",USE.NAMES=T,simplify = F))
+
+IntaRNA.results=c(sapply(species_list_mirna,read_results_generic,tool="IntaRNA",USE.NAMES=T,simplify = F),
+                   sapply(species_list_snRNA,read_results_generic,tool="IntaRNA",USE.NAMES=T,simplify = F),
+                   sapply(species_list_pirna,read_results_generic,tool="IntaRNA",USE.NAMES=T,simplify = F),  
+                   sapply(species_list_snoRNA,read_results_generic,tool="IntaRNA",USE.NAMES=T,simplify = F))
+
+RNAplex.results=c(sapply(species_list_mirna,read_results_generic,tool="RNAplex",USE.NAMES=T,simplify = F),
+                  sapply(species_list_snRNA,read_results_generic,tool="RNAplex",USE.NAMES=T,simplify = F),
+                  sapply(species_list_pirna,read_results_generic,tool="RNAplex",USE.NAMES=T,simplify = F),  
+                  sapply(species_list_snoRNA,read_results_generic,tool="RNAplex",USE.NAMES=T,simplify = F))
+
+RNAcofold.results=c(sapply(species_list_mirna,read_results_generic,tool="RNAcofold",USE.NAMES=T,simplify = F),
+                  sapply(species_list_snRNA,read_results_generic,tool="RNAcofold",USE.NAMES=T,simplify = F),
+                  sapply(species_list_pirna,read_results_generic,tool="RNAcofold",USE.NAMES=T,simplify = F),  
+                  sapply(species_list_snoRNA,read_results_generic,tool="RNAcofold",USE.NAMES=T,simplify = F))
+
+Pairfold.results=c(sapply(species_list_mirna,read_results_generic,tool="pairfold",USE.NAMES=T,simplify = F),
+                    sapply(species_list_snRNA,read_results_generic,tool="pairfold",USE.NAMES=T,simplify = F),
+                    sapply(species_list_pirna,read_results_generic,tool="pairfold",USE.NAMES=T,simplify = F),  
+                    sapply(species_list_snoRNA,read_results_generic,tool="pairfold",USE.NAMES=T,simplify = F))
+
+
+RNAup.results=c(sapply(species_list_mirna,read_results_generic,tool="RNAup",USE.NAMES=T,simplify = F),
+                   sapply(species_list_snRNA,read_results_generic,tool="RNAup",USE.NAMES=T,simplify = F),
+                   sapply(species_list_pirna,read_results_generic,tool="RNAup",USE.NAMES=T,simplify = F),  
+                   sapply(species_list_snoRNA,read_results_generic,tool="RNAup",USE.NAMES=T,simplify = F))
+
+RNAduplex.results=c(sapply(species_list_mirna,read_results_generic,tool="RNAduplex",USE.NAMES=T,simplify = F),
+                sapply(species_list_snRNA,read_results_generic,tool="RNAduplex",USE.NAMES=T,simplify = F),
+                sapply(species_list_pirna,read_results_generic,tool="RNAduplex",USE.NAMES=T,simplify = F),  
+                sapply(species_list_snoRNA,read_results_generic,tool="RNAduplex",USE.NAMES=T,simplify = F))
+
+RNAhybrid.results=c(sapply(species_list_mirna,read_results_generic,tool="RNAhybrid",USE.NAMES=T,simplify = F),
+                    sapply(species_list_snRNA,read_results_generic,tool="RNAhybrid",USE.NAMES=T,simplify = F),
+                    sapply(species_list_pirna,read_results_generic,tool="RNAhybrid",USE.NAMES=T,simplify = F),  
+                    sapply(species_list_snoRNA,read_results_generic,tool="RNAhybrid",USE.NAMES=T,simplify = F))
+
+bifold.results=c(sapply(species_list_mirna,read_results_generic,tool="bifold",USE.NAMES=T,simplify = F),
+                    sapply(species_list_snRNA,read_results_generic,tool="bifold",USE.NAMES=T,simplify = F),
+                    sapply(species_list_pirna,read_results_generic,tool="bifold",USE.NAMES=T,simplify = F),  
+                    sapply(species_list_snoRNA,read_results_generic,tool="bifold",USE.NAMES=T,simplify = F))
+
+DuplexFold.results=c(sapply(species_list_mirna,read_results_generic,tool="DuplexFold",USE.NAMES=T,simplify = F),
+                 sapply(species_list_snRNA,read_results_generic,tool="DuplexFold",USE.NAMES=T,simplify = F),
+                 sapply(species_list_pirna,read_results_generic,tool="DuplexFold",USE.NAMES=T,simplify = F),  
+                 sapply(species_list_snoRNA,read_results_generic,tool="DuplexFold",USE.NAMES=T,simplify = F))
+
+ssearch.results=c(sapply(species_list_mirna,read_results_generic,tool="ssearch36",USE.NAMES=T,simplify = F),
+                     sapply(species_list_snRNA,read_results_generic,tool="ssearch36",USE.NAMES=T,simplify = F),
+                     sapply(species_list_pirna,read_results_generic,tool="ssearch36",USE.NAMES=T,simplify = F),  
+                     sapply(species_list_snoRNA,read_results_generic,tool="ssearch36",USE.NAMES=T,simplify = F))
+
+
+
+#mirna_results_df=data.frame(rbind(
+#c(TPR_calculate(RIsearch.results[[1]]),TPR_calculate(RIsearch.results[[2]]),TPR_calculate(RIsearch.results[[3]]),TPR_calculate(read_results_generic("arabidopsis.siRNA.","RIsearch")),TPR_calculate(read_results_generic("mouse.piRNA.","RIsearch")),overall_TPR_calculate(RIsearch.results)),
+#c(TPR_calculate(IntaRNA.results[[1]]),TPR_calculate(IntaRNA.results[[2]]),TPR_calculate(IntaRNA.results[[3]]),TPR_calculate(read_results_generic("arabidopsis.siRNA.","IntaRNA")),TPR_calculate(read_results_generic("mouse.piRNA.","IntaRNA")),overall_TPR_calculate(IntaRNA.results)),
+#c(TPR_calculate(RNAplex.results[[1]]),TPR_calculate(RNAplex.results[[2]]),TPR_calculate(RNAplex.results[[3]]),TPR_calculate(read_results_generic("arabidopsis.siRNA.","RNAplex")),TPR_calculate(read_results_generic("mouse.piRNA.","RNAplex")),overall_TPR_calculate(RNAplex.results)),
+#c(TPR_calculate(RNAcofold.results[[1]]),TPR_calculate(RNAcofold.results[[2]]),TPR_calculate(RNAcofold.results[[3]]),TPR_calculate(read_results_generic("arabidopsis.siRNA.","RNAcofold")),TPR_calculate(read_results_generic("mouse.piRNA.","RNAcofold")),overall_TPR_calculate(RNAcofold.results)),
+#c(TPR_calculate(Pairfold.results[[1]]),TPR_calculate(Pairfold.results[[2]]),TPR_calculate(Pairfold.results[[3]]),TPR_calculate(read_results_generic("arabidopsis.siRNA.","pairfold")),TPR_calculate(read_results_generic("mouse.piRNA.","pairfold")),overall_TPR_calculate(Pairfold.results)),
+#c(TPR_calculate(RNAup.results[[1]]),TPR_calculate(RNAup.results[[2]]),TPR_calculate(RNAup.results[[3]]),TPR_calculate(read_results_generic("arabidopsis.siRNA.","RNAup")),TPR_calculate(read_results_generic("mouse.piRNA.","RNAup")),overall_TPR_calculate(RNAup.results)),
+#(TPR_calculate(RNAduplex.results[[1]]),TPR_calculate(RNAduplex.results[[2]]),TPR_calculate(RNAduplex.results[[3]]),TPR_calculate(read_results_generic("arabidopsis.siRNA.","RNAduplex")),TPR_calculate(read_results_generic("mouse.piRNA.","RNAduplex")),overall_TPR_calculate(RNAduplex.results)),
+#c(TPR_calculate(RNAhybrid.results[[1]]),TPR_calculate(RNAhybrid.results[[2]]),TPR_calculate(RNAhybrid.results[[3]]),TPR_calculate(read_results_generic("arabidopsis.siRNA.","RNAhybrid")),TPR_calculate(read_results_generic("mouse.piRNA.","RNAhybrid")),overall_TPR_calculate(RNAhybrid.results)),
+#c(TPR_calculate(bifold.results[[1]]),TPR_calculate(bifold.results[[2]]),TPR_calculate(bifold.results[[3]]),TPR_calculate(read_results_generic("arabidopsis.siRNA.","bifold")),TPR_calculate(read_results_generic("mouse.piRNA.","bifold")),overall_TPR_calculate(bifold.results)),
+#c(TPR_calculate(DuplexFold.results[[1]]),TPR_calculate(DuplexFold.results[[2]]),TPR_calculate(DuplexFold.results[[3]]),TPR_calculate(read_results_generic("arabidopsis.siRNA.","DuplexFold")),TPR_calculate(read_results_generic("mouse.piRNA.","DuplexFold")),overall_TPR_calculate(DuplexFold.results)),
+#c(TPR_calculate(ssearch.results[[1]]),TPR_calculate(ssearch.results[[2]]),TPR_calculate(ssearch.results[[3]]),TPR_calculate(read_results_generic("arabidopsis.siRNA.","ssearch36")),TPR_calculate(read_results_generic("mouse.piRNA.","ssearch36")),overall_TPR_calculate(ssearch.results))))
+
+#1 mirna elegans
+#2 mirna human
+#3 mirna arabidopsis
+#4 snrna elegans
+#5 snrna human
+#6 snrna arabidopsis
+#7 snrna yeast
 
 
 
 mirna_results_df=data.frame(rbind(
-c(significant_count(RIsearch.results[[1]]),significant_count(RIsearch.results[[2]]),significant_count(RIsearch.results[[3]]),significant_count(read_results_sirna("arabidopsis","RIsearch")),significant_count(read_results_pirna("mouse","RIsearch")),overall_significant_count(RIsearch.results)),
-c(significant_count(IntaRNA.results[[1]]),significant_count(IntaRNA.results[[2]]),significant_count(IntaRNA.results[[3]]),significant_count(read_results_sirna("arabidopsis","IntaRNA")),significant_count(read_results_pirna("mouse","IntaRNA")),overall_significant_count(IntaRNA.results)),
-c(significant_count(RNAplex.results[[1]]),significant_count(RNAplex.results[[2]]),significant_count(RNAplex.results[[3]]),significant_count(read_results_sirna("arabidopsis","RNAplex")),significant_count(read_results_pirna("mouse","RNAplex")),overall_significant_count(RNAplex.results)),
-c(significant_count(RNAcofold.results[[1]]),significant_count(RNAcofold.results[[2]]),significant_count(RNAcofold.results[[3]]),significant_count(read_results_sirna("arabidopsis","RNAcofold")),significant_count(read_results_pirna("mouse","RNAcofold")),overall_significant_count(RNAcofold.results)),
-c(significant_count(Pairfold.results[[1]]),significant_count(Pairfold.results[[2]]),significant_count(Pairfold.results[[3]]),significant_count(read_results_sirna("arabidopsis","pairfold")),significant_count(read_results_pirna("mouse","pairfold")),overall_significant_count(Pairfold.results)),
-c(significant_count(RNAup.results[[1]]),significant_count(RNAup.results[[2]]),significant_count(RNAup.results[[3]]),significant_count(read_results_sirna("arabidopsis","RNAup")),significant_count(read_results_pirna("mouse","RNAup")),overall_significant_count(RNAup.results)),
-c(significant_count(RNAduplex.results[[1]]),significant_count(RNAduplex.results[[2]]),significant_count(RNAduplex.results[[3]]),significant_count(read_results_sirna("arabidopsis","RNAduplex")),significant_count(read_results_pirna("mouse","RNAduplex")),overall_significant_count(RNAduplex.results)),
-c(significant_count(RNAhybrid.results[[1]]),significant_count(RNAhybrid.results[[2]]),significant_count(RNAhybrid.results[[3]]),significant_count(read_results_sirna("arabidopsis","RNAhybrid")),significant_count(read_results_pirna("mouse","RNAhybrid")),overall_significant_count(RNAhybrid.results)),
-c(significant_count(bifold.results[[1]]),significant_count(bifold.results[[2]]),significant_count(bifold.results[[3]]),significant_count(read_results_sirna("arabidopsis","bifold")),significant_count(read_results_pirna("mouse","bifold")),overall_significant_count(bifold.results)),
-c(significant_count(DuplexFold.results[[1]]),significant_count(DuplexFold.results[[2]]),significant_count(DuplexFold.results[[3]]),significant_count(read_results_sirna("arabidopsis","DuplexFold")),significant_count(read_results_pirna("mouse","DuplexFold")),overall_significant_count(DuplexFold.results)),
-c(significant_count(ssearch.results[[1]]),significant_count(ssearch.results[[2]]),significant_count(ssearch.results[[3]]),significant_count(read_results_sirna("arabidopsis","ssearch36")),significant_count(read_results_pirna("mouse","ssearch36")),overall_significant_count(ssearch.results))
-))
+c(unlist(lapply(RIsearch.results,TPR_calculate)),overall_TPR_calculate(RIsearch.results)),
+c(unlist(lapply(IntaRNA.results,TPR_calculate)),overall_TPR_calculate(IntaRNA.results)),
+c(unlist(lapply(RNAplex.results,TPR_calculate)),overall_TPR_calculate(RNAplex.results)),
+c(unlist(lapply(RNAcofold.results,TPR_calculate)),overall_TPR_calculate(RNAcofold.results)),
+c(unlist(lapply(Pairfold.results,TPR_calculate)),overall_TPR_calculate(Pairfold.results)),
+c(unlist(lapply(RNAup.results,TPR_calculate)),overall_TPR_calculate(RNAup.results)),
+c(unlist(lapply(RNAduplex.results,TPR_calculate)),overall_TPR_calculate(RNAduplex.results)),
+c(unlist(lapply(RNAhybrid.results,TPR_calculate)),overall_TPR_calculate(RNAhybrid.results)),
+c(unlist(lapply(bifold.results,TPR_calculate)),overall_TPR_calculate(bifold.results)),
+c(unlist(lapply(DuplexFold.results,TPR_calculate)),overall_TPR_calculate(DuplexFold.results)),
+c(unlist(lapply(ssearch.results,TPR_calculate)),overall_TPR_calculate(ssearch.results))))
+
+rownames(mirna_results_df)=c("RIsearch","IntaRNA","RNAplex","RNAcofold","Pairfold","RNAup","RNAduplex","RNAhybrid","bifold","DuplexFold","ssearch")
+
 
 mirna_results_df[is.na(mirna_results_df)]=0
 
@@ -70,16 +147,12 @@ mirna_results_df[is.na(mirna_results_df)]=0
 
 
 
-formatted_mirna_results_df=signif(mirna_results_df,digits = 2)
-formatted_mirna_results_df=data.frame(Elegans=paste0(formatted_mirna_results_df[,1],"(",formatted_mirna_results_df[,2],")"),
-                                      Human=paste0(formatted_mirna_results_df[,3],"(",formatted_mirna_results_df[,4],")"),
-                                      Arabidopsis=paste0(formatted_mirna_results_df[,5],"(",formatted_mirna_results_df[,6],")"),
-                                      Arabidopsis_siRNA=paste0(formatted_mirna_results_df[,7],"(",formatted_mirna_results_df[,8],")"),
-                                      Mouse_piRNA=paste0(formatted_mirna_results_df[,9],"(",formatted_mirna_results_df[,10],")"),
-                                      Overall=paste0(formatted_mirna_results_df[,11],"(",formatted_mirna_results_df[,12],")"))
+#formatted_mirna_results_df=data.frame(Elegans=paste0(formatted_mirna_results_df[,1],"(",formatted_mirna_results_df[,2],")"),
+#                                      Human=paste0(formatted_mirna_results_df[,3],"(",formatted_mirna_results_df[,4],")"),
+#                                      Arabidopsis=paste0(formatted_mirna_results_df[,5],"(",formatted_mirna_results_df[,6],")"),
+#                                      Arabidopsis_siRNA=paste0(formatted_mirna_results_df[,7],"(",formatted_mirna_results_df[,8],")"),
+#                                      Mouse=paste0(formatted_mirna_results_df[,9],"(",formatted_mirna_results_df[,10],")"),
+#                                      Overall=paste0(formatted_mirna_results_df[,11],"(",formatted_mirna_results_df[,12],")"))
 
-rownames(formatted_mirna_results_df)=c("RIsearch","IntaRNA","RNAplex","RNAcofold","Pairfold","RNAup","RNAduplex","RNAhybrid","bifold","DuplexFold","ssearch")
-
-
-write.table(formatted_mirna_results_df,file="/home/suu13/projects/benchmark/eukaryotes/results/eukaryotic.mirna.results.table.csv",sep="\t")
+write.table(signif(mirna_results_df),file="/home/suu13/projects/benchmark/eukaryotes/results/eukaryotic.interactions.results.table.csv",sep="\t")
 

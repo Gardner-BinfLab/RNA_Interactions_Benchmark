@@ -49,8 +49,7 @@ significant_results_matrix=matrix(c(significant_count(RIsearch.results),
                                 significant_count(ssearch.results)
                                 ),
                               nrow=2)
-rownames(significant_results_matrix)=c("Extreme","Normal")
-colnames(significant_results_matrix)=c("RIsearch","IntaRNA","RNAplex","RNAcofold","RNAup","RNAduplex","RNAhybrid","Pairfold","DuplexFold","bifold","ssearch")
+#rownames(significant_results_matrix)=c("Extreme","Normal")
 
 
 
@@ -80,8 +79,22 @@ bifold.plot.AUC=trapz(1:100,bifold.plot.numbers)
 DuplexFold.plot.AUC=trapz(1:100,DuplexFold.plot.numbers)
 ssearch.plot.AUC=trapz(1:100,ssearch.plot.numbers)
 
-t(significant_results_matrix)
-final_table=data.frame(AUC=c(RIsearch.plot.AUC,IntaRNA.plot.AUC,RNAplex.plot.AUC,RNAcofold.plot.AUC,Pairfold.plot.AUC,RNAup.plot.AUC,RNAduplex.plot.AUC,RNAhybrid.plot.AUC,bifold.plot.AUC,DuplexFold.plot.AUC,ssearch.plot.AUC))
+final_table=data.frame(AUC=c(RIsearch.plot.AUC,
+                             IntaRNA.plot.AUC,
+                             RNAplex.plot.AUC,
+                             RNAcofold.plot.AUC,
+                             Pairfold.plot.AUC,
+                             RNAup.plot.AUC,
+                             RNAduplex.plot.AUC,
+                             RNAhybrid.plot.AUC,
+                             bifold.plot.AUC,
+                             DuplexFold.plot.AUC,
+                             ssearch.plot.AUC))
+
+final_table=signif(cbind(final_table,t(significant_results_matrix)),digits = 2)
+
+final_table=data.frame(AUC=final_table[,1],TPR=paste0(final_table[,2],"(",final_table[,3],")"))
+rownames(final_table)=c("RIsearch","IntaRNA","RNAplex","RNAcofold","Pairfold","RNAup","RNAduplex","RNAhybrid","bifold","DuplexFold","ssearch")
 
 
 
@@ -130,7 +143,8 @@ legend("topleft",legend=c("RIsearch","IntaRNA","RNAplex","RNAcofold","Pairfold",
 dev.off()
 
 
-write.table(cbind(final_table,signif(t(significant_results_matrix),digits = 2)),file="/home/suu13/projects/benchmark/bacteria/bacterial.results.table.csv",sep="\t")
+
+write.table(final_table,file="/home/suu13/projects/benchmark/bacteria/bacterial.results.table.csv",sep="\t")
 
 
 

@@ -18,7 +18,10 @@ normal_parameters=fitdistr(as.vector(parsed_result_csv$V3[2:length(parsed_result
 
 p_value_native_gumbel=pgumbel(-1*parsed_result_csv$V3[1],unname(gumbel_parameters[2]),unname(gumbel_parameters[1]),lower.tail = F)
 p_value_native_normal=pnorm(parsed_result_csv$V3[1],mean=normal_parameters$estimate[1],sd=normal_parameters$estimate[2],lower.tail = T)
-  
-cat(p_value_native_gumbel,"\t",p_value_native_normal,"\t",rank(parsed_result_csv$V3)[1],"\n")
+
+gumbel_false_positives=table(pgumbel(-1*parsed_result_csv$V3[2:length(parsed_result_csv$V3)],unname(gumbel_parameters[2]),unname(gumbel_parameters[1]),lower.tail = F) < 0.05)['TRUE']
+normal_false_positives=table(pnorm(parsed_result_csv$V3[2:length(parsed_result_csv$V3)],mean=normal_parameters$estimate[1],sd=normal_parameters$estimate[2],lower.tail = T) <0.05)['TRUE']
+    
+cat(p_value_native_gumbel,"\t",p_value_native_normal,"\t",rank(parsed_result_csv$V3)[1],"\t",scale(parsed_result_csv$V3)[1],"\t",gumbel_false_positives,"\t",normal_false_positives,"\n")
 
 
