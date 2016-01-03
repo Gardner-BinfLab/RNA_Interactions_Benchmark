@@ -1,9 +1,14 @@
 require("RColorBrewer")
 
+require("fields")
+
+
+require("plotrix")
+
 
 #tools=c("RIsearch","IntaRNA","RNAplex","RNAcofold","pairfold","RNAup","RNAduplex","RNAhybrid","bifold","DuplexFold","ssearch","ractip","bistarna","AccessFold")
 
-tools=c("RNAup","RNAplex","IntaRNA","RNAcofold","pairfold","DuplexFold","RNAduplex","RNAhybrid","ssearch","RIsearch","AccessFold","bifold","bistarna","ractip")
+tools=c("RNAup","RNAplex","IntaRNA","RNAcofold","pairfold","DuplexFold","RNAduplex","RNAhybrid","ssearch","RIsearch","AccessFold","bifold","bistaRNA","ractIP")
 
 
 #Colors=rainbow(14)
@@ -11,13 +16,18 @@ Colors=c("#C3873B","#CB52CD","#769FBD","#6CD056","#583A2D","#C1467E","#C0C78C","
 
 
 
-bacterial.regional.results=read.csv("/home/suu13/projects/benchmark/bacteria/bacterial.results.table.regional.csv",header = F,sep="\t")
-eukaryotic.regional.results=read.csv("/home/suu13/projects/benchmark/eukaryotes/results/eukaryotic.results.table.regional.csv",header = F,sep="\t")
-archaeal.regional.results=read.csv("/home/suu13/projects/benchmark/archaea/results/archaeal.results.table.regional.csv",header = F,sep="\t")
+#bacterial.regional.results=read.csv("/home/suu13/projects/benchmark/bacteria/bacterial.results.table.regional.csv",header = F,sep="\t")
+#eukaryotic.regional.results=read.csv("/home/suu13/projects/benchmark/eukaryotes/results/eukaryotic.results.table.regional.csv",header = F,sep="\t")
+#archaeal.regional.results=read.csv("/home/suu13/projects/benchmark/archaea/results/archaeal.results.table.regional.csv",header = F,sep="\t")
+
+bacterial.regional.results=read.csv("bacterial.results.table.regional.csv",header = F,sep="\t")
+eukaryotic.regional.results=read.csv("eukaryotic.results.table.regional.csv",header = F,sep="\t")
+archaeal.regional.results=read.csv("archaeal.results.table.regional.csv",header = F,sep="\t")
+
 
 extract_tool_result=function(tool,df){
 
-  return(df[df$V1 == tool,])
+  return(df[tolower(df$V1) == tolower(tool),])
   
 }
 
@@ -28,7 +38,7 @@ extract_tool_result=function(tool,df){
 results_for_boxplot=sapply(tools,extract_tool_result,df=rbind(bacterial.regional.results,eukaryotic.regional.results,archaeal.regional.results),USE.NAMES = T,simplify = F)
 
 pdf("overall.results.pdf",width = 12.1,height = 11)
-par(oma=c(10,4,2,2),mar=c(0,3,2,1),xpd=NA,cex.axis=1.1) #c(bottom, left, top, right)
+par(oma=c(10,4,2,2),mar=c(1,3,2,1),xpd=NA,cex.axis=1.1) #c(bottom, left, top, right)
 layout(matrix(c(1,1,2,2,3,3),nrow=3,byrow = T))
 boxplot(do.call(cbind,lapply(results_for_boxplot,function(df) return(df$V5))),names=F,col=Colors,ylim=c(-0.05,1.05)) #TPR
 mtext("A",side = 3,adj=0,cex=1.8,font=2)
@@ -42,8 +52,35 @@ mtext("MCC",side=2,line=3,cex=1.8)
 axis(1,at=1:14,cex.axis=1.8,las=2,labels=F)
 text(1:14,-0.3,labels=tools,cex=2,srt=45)
 
-#mtext("Overall performance of RNA interaction algorithms",outer = T,cex=1.8)
+dev.off()
 
+
+
+cor.matrix.tools=cor(do.call(cbind,lapply(results_for_boxplot,function(df) return(df$V7))))
+cor.matrix.tools.reorder=cor.matrix.tools[hclust(dist(cor.matrix.tools))$order,hclust(dist(t(cor.matrix.tools)))$order]
+
+pdf("overall.results.heatmap.pdf",width = 12.1*1.5,height = 11*1.5)
+par(mar=c(10,10,2,7),xpd=NA,cex=1.8) #c(bottom, left, top, right)
+image(cor.matrix.tools.reorder,col=two.colors(n=12,"cadetblue","firebrick","grey"),axes=F)
+
+axis(2,at=seq(0,1,by=1/13),labels = F,cex=1.8)
+text(-0.2,seq(0,1,by=1/13),labels=rownames(cor.matrix.tools.reorder),cex=1.5,srt=0,xpd=T)
+
+axis(1,at=seq(0,1,by=1/13),labels = colnames(cor.matrix.tools.reorder),las=2,cex.axis=1.5)
+#text(seq(0,1,by=1/13),-0.15,labels=colnames(cor.matrix.tools.reorder),cex=1.5,srt=90,xpd=T)
+
+image.plot(cor.matrix.tools.reorder,col=two.colors(n=12,"cadetblue","firebrick","grey"),axes=F,legend.only=T,axis.args = list(cex.axis = 1.8,las=1))
 
 
 dev.off()
+
+
+pdf("overall.results.heatmap.supplement.pdf",width = 12.1,height = 11*1.5)
+
+heatmap(do.call(cbind,lapply(results_for_boxplot,function(df) return(df$V7))),Rowv = NA,margins = c(10,5),
+        cexCol = 1.8)
+
+
+dev.off()
+
+
