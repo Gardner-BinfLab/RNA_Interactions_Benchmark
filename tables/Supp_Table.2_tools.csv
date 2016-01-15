@@ -1,0 +1,15 @@
+Tools Evaluated,Benchmarked or Tested,Type,Reference
+AccessFold,Various eukaryotic,MFE (include accessibility),http://rna.urmc.rochester.edu/RNAstructureDownload.html
+bifold,,MFE (include intra-structure),http://rna.urmc.rochester.edu/RNAstructureDownload.html
+bistarna,,MFE (include accessibility),http://www.ncbi.nlm.nih.gov/pubmed/22084009
+DuplexFold,,MFE,http://rna.urmc.rochester.edu/RNAstructureDownload.html
+IntaRNA,Bacterial sRNAs,MFE (include accessibility),http://bioinformatics.oxfordjournals.org/content/24/24/2849
+Pairfold,Tested on a single ribozyme,MFE (include intra-structure),http://nar.oxfordjournals.org/content/31/13/3416.long - http://www.sciencedirect.com/science/article/pii/S0022283604014032
+RactIP,Bacterial sRNAs and various eukaryotic,Integer programming (includes intra-structure),http://bioinformatics.oxfordjournals.org/content/26/18/i460.short
+RIsearch,Human miRNA & Bacterial sRNAs,Alignment-like,http://bioinformatics.oxfordjournals.org/cgi/content/long/28/21/2738
+RNAcofold,siRNA and miRNA,MFE (include intra-structure),http://www.almob.org/content/1/1/3 -  http://link.springer.com/10.1007/BF00818163
+RNAduplex,,MFE,http://www.pubmedcentral.nih.gov/articlerender.fcgi?artid=3319429&tool=pmcentrez&rendertype=abstract
+RNAhybrid,miRNAs,MFE,http://nar.oxfordjournals.org/content/34/suppl_2/W451.full - http://rnajournal.cshlp.org/content/10/10/1507.abstract
+RNAplex,Human miRNA & Bacterial sRNAs,MFE (include accessibility),http://bioinformatics.oxfordjournals.org/content/24/22/2657.long
+RNAup,siRNAs,MFE (include accessibility),http://bioinformatics.oxfordjournals.org/content/22/10/1177.long
+Ssearch,NA,Alignment,http://www.pubmedcentral.nih.gov/articlerender.fcgi?artid=280013&tool=pmcentrez&rendertype=abstract
