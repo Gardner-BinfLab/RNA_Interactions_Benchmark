@@ -89,15 +89,14 @@ dev.off()
 
 
 
-pdf("overall.results.heatmap.pdf",width = 12.1,height = 11*1.5)
+pdf("overall.results.heatmap.pdf",width = 12.1,height = 11)
 
 tools_result_matrix=do.call(cbind,lapply(results_for_boxplot,function(df) return(df$V7)))
-heatmap.2(tools_result_matrix,Rowv = F,margins = c(10,10),col=colorRampPalette(rev(brewer.pal(n = 7, name =                                                                                                "RdYlBu")))(100),
-          cexCol = 1.8, lhei = c(1.5, 1),trace="none",key=F,keysize=1,key.title ="",density.info="density",cexRow = 0.8,labRow=as.character(lapply(results_for_boxplot,function(df) return(df$V8))$RIsearch))
+heatmap.2(tools_result_matrix,Rowv = F,margins = c(10,10),col=colorRampPalette(rev(brewer.pal(n = 7, name = "RdYlBu")))(100), cexCol = 1.8, lhei = c(2, 15),trace="none",key=F,keysize=1,key.title ="",density.info="density",cexRow = 0.8,labRow=as.character(lapply(results_for_boxplot,function(df) return(df$V8))$RIsearch))
 
 par(fig=c(0.2,0.95,0.8,1),xpd=T,mar=c(0,0,0,0)) #c(bottom, left, top, right) 
 mtext("MCC",side=4,xpd=T,outer=F,line=-5,cex = 1.5)
-image.plot(tools_result_matrix,legend.only = T,col=two.colors(n=100,"lightsteelblue4","firebrick","grey"),horizontal = F)
+image.plot(tools_result_matrix,legend.only = T,col=colorRampPalette(rev(brewer.pal(n = 7, name = "RdYlBu")))(100),horizontal = F)
 dev.off()
 
 
