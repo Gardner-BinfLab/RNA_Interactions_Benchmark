@@ -1,14 +1,14 @@
 require("RColorBrewer")
 
 require("fields")
-
+require("gplots")
 
 require("plotrix")
 
 
 #tools=c("RIsearch","IntaRNA","RNAplex","RNAcofold","pairfold","RNAup","RNAduplex","RNAhybrid","bifold","DuplexFold","ssearch","ractip","bistarna","AccessFold")
 
-tools=c("RNAup","RNAplex","IntaRNA","RNAcofold","pairfold","DuplexFold","RNAduplex","RNAhybrid","ssearch","RIsearch","AccessFold","bifold","bistaRNA","ractIP")
+tools=c("RNAup","IntaRNA","RNAplex","RIsearch","RNAcofold","pairfold","DuplexFold","RNAduplex","RNAhybrid","ssearch","AccessFold","bifold","bistaRNA","ractIP")
 
 
 #Colors=rainbow(14)
@@ -16,13 +16,13 @@ Colors=c("#C3873B","#CB52CD","#769FBD","#6CD056","#583A2D","#C1467E","#C0C78C","
 
 
 
-#bacterial.regional.results=read.csv("/home/suu13/projects/benchmark/bacteria/bacterial.results.table.regional.csv",header = F,sep="\t")
-#eukaryotic.regional.results=read.csv("/home/suu13/projects/benchmark/eukaryotes/results/eukaryotic.results.table.regional.csv",header = F,sep="\t")
-#archaeal.regional.results=read.csv("/home/suu13/projects/benchmark/archaea/results/archaeal.results.table.regional.csv",header = F,sep="\t")
+bacterial.regional.results=read.csv("/home/suu13/projects/benchmark/bacteria/bacterial.results.table.regional.csv",header = F,sep="\t")
+eukaryotic.regional.results=read.csv("/home/suu13/projects/benchmark/eukaryotes/results/eukaryotic.results.table.regional.csv",header = F,sep="\t")
+archaeal.regional.results=read.csv("/home/suu13/projects/benchmark/archaea/results/archaeal.results.table.regional.csv",header = F,sep="\t")
 
-bacterial.regional.results=read.csv("bacterial.results.table.regional.csv",header = F,sep="\t")
-eukaryotic.regional.results=read.csv("eukaryotic.results.table.regional.csv",header = F,sep="\t")
-archaeal.regional.results=read.csv("archaeal.results.table.regional.csv",header = F,sep="\t")
+#bacterial.regional.results=read.csv("bacterial.results.table.regional.csv",header = F,sep="\t")
+#eukaryotic.regional.results=read.csv("eukaryotic.results.table.regional.csv",header = F,sep="\t")
+#archaeal.regional.results=read.csv("archaeal.results.table.regional.csv",header = F,sep="\t")
 
 
 extract_tool_result=function(tool,df){
@@ -37,7 +37,7 @@ extract_tool_result=function(tool,df){
 
 results_for_boxplot=sapply(tools,extract_tool_result,df=rbind(bacterial.regional.results,eukaryotic.regional.results,archaeal.regional.results),USE.NAMES = T,simplify = F)
 
-pdf("overall.results.pdf",width = 12.1,height = 11)
+pdf("overall.results.boxplot.pdf",width = 12.1,height = 11)
 par(oma=c(10,4,2,2),mar=c(1,3,2,1),xpd=NA,cex.axis=1.1) #c(bottom, left, top, right)
 layout(matrix(c(1,1,2,2,3,3),nrow=3,byrow = T))
 boxplot(do.call(cbind,lapply(results_for_boxplot,function(df) return(df$V5))),names=F,col=Colors,ylim=c(-0.05,1.05)) #TPR
@@ -59,7 +59,7 @@ dev.off()
 cor.matrix.tools=cor(do.call(cbind,lapply(results_for_boxplot,function(df) return(df$V7))))
 cor.matrix.tools.reorder=cor.matrix.tools[hclust(dist(cor.matrix.tools))$order,hclust(dist(t(cor.matrix.tools)))$order]
 
-pdf("overall.results.heatmap.pdf",width = 12.1*1.5,height = 11*1.5)
+pdf("overall.results.correlation.pdf",width = 12.1*1.5,height = 11*1.5)
 par(mar=c(10,10,2,7),xpd=NA,cex=1.8) #c(bottom, left, top, right)
 image(cor.matrix.tools.reorder,col=two.colors(n=12,"cadetblue","firebrick","grey"),axes=F)
 
@@ -75,12 +75,33 @@ image.plot(cor.matrix.tools.reorder,col=two.colors(n=12,"cadetblue","firebrick",
 dev.off()
 
 
-pdf("overall.results.heatmap.supplement.pdf",width = 12.1,height = 11*1.5)
 
-heatmap(do.call(cbind,lapply(results_for_boxplot,function(df) return(df$V7))),Rowv = NA,margins = c(10,5),
-        cexCol = 1.8)
+
+
+
+
+
+pdf("overall.results.pheatmap.pdf",onefile=FALSE,width = 10)
+pheatmap(tools_result_matrix,cluster_rows=FALSE,width = 3,fontsize_col=12)
 
 
 dev.off()
 
+
+
+pdf("overall.results.heatmap.pdf",width = 12.1,height = 11*1.5)
+
+tools_result_matrix=do.call(cbind,lapply(results_for_boxplot,function(df) return(df$V7)))
+heatmap.2(tools_result_matrix,Rowv = F,margins = c(10,10),col=colorRampPalette(rev(brewer.pal(n = 7, name =                                                                                                "RdYlBu")))(100),
+          cexCol = 1.8, lhei = c(1.5, 1),trace="none",key=F,keysize=1,key.title ="",density.info="density",cexRow = 0.8,labRow=as.character(lapply(results_for_boxplot,function(df) return(df$V8))$RIsearch))
+
+par(fig=c(0.2,0.95,0.8,1),xpd=T,mar=c(0,0,0,0)) #c(bottom, left, top, right) 
+mtext("MCC",side=4,xpd=T,outer=F,line=-5,cex = 1.5)
+image.plot(tools_result_matrix,legend.only = T,col=two.colors(n=100,"lightsteelblue4","firebrick","grey"),horizontal = F)
+dev.off()
+
+
+
+#more stats of predictions
+aggregate(do.call(rbind,results_for_boxplot),by=list(do.call(rbind,results_for_boxplot)$V8),mean)
 
