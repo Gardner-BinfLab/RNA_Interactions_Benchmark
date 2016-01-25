@@ -4,7 +4,7 @@ require("fields")
 require("gplots")
 
 require("plotrix")
-
+require("pheatmap")
 
 #tools=c("RIsearch","IntaRNA","RNAplex","RNAcofold","pairfold","RNAup","RNAduplex","RNAhybrid","bifold","DuplexFold","ssearch","ractip","bistarna","AccessFold")
 
@@ -20,6 +20,7 @@ bacterial.regional.results=read.csv("/home/suu13/projects/benchmark/bacteria/bac
 eukaryotic.regional.results=read.csv("/home/suu13/projects/benchmark/eukaryotes/results/eukaryotic.results.table.regional.csv",header = F,sep="\t")
 archaeal.regional.results=read.csv("/home/suu13/projects/benchmark/archaea/results/archaeal.results.table.regional.csv",header = F,sep="\t")
 
+combined.results=read.csv("/home/suu13/projects/benchmark/eukaryotes/forfigure/combined.results.csv",header = F,sep="\t")
 #bacterial.regional.results=read.csv("bacterial.results.table.regional.csv",header = F,sep="\t")
 #eukaryotic.regional.results=read.csv("eukaryotic.results.table.regional.csv",header = F,sep="\t")
 #archaeal.regional.results=read.csv("archaeal.results.table.regional.csv",header = F,sep="\t")
@@ -35,7 +36,8 @@ extract_tool_result=function(tool,df){
 
 
 
-results_for_boxplot=sapply(tools,extract_tool_result,df=rbind(bacterial.regional.results,eukaryotic.regional.results,archaeal.regional.results),USE.NAMES = T,simplify = F)
+#results_for_boxplot=sapply(tools,extract_tool_result,df=rbind(archaeal.regional.results,bacterial.regional.results,eukaryotic.regional.results),USE.NAMES = T,simplify = F)
+results_for_boxplot=sapply(tools,extract_tool_result,df=combined.results,USE.NAMES = T,simplify = F)
 
 pdf("overall.results.boxplot.pdf",width = 12.1,height = 11)
 par(oma=c(10,4,2,2),mar=c(1,3,2,1),xpd=NA,cex.axis=1.1) #c(bottom, left, top, right)
@@ -81,18 +83,11 @@ dev.off()
 
 
 
-pdf("overall.results.pheatmap.pdf",onefile=FALSE,width = 10)
-pheatmap(tools_result_matrix,cluster_rows=FALSE,width = 3,fontsize_col=12)
-
-
-dev.off()
-
-
 
 pdf("overall.results.heatmap.pdf",width = 12.1,height = 11)
 
 tools_result_matrix=do.call(cbind,lapply(results_for_boxplot,function(df) return(df$V7)))
-heatmap.2(tools_result_matrix,Rowv = F,margins = c(10,10),col=colorRampPalette(rev(brewer.pal(n = 7, name = "RdYlBu")))(100), cexCol = 1.8, lhei = c(2, 15),trace="none",key=F,keysize=1,key.title ="",density.info="density",cexRow = 0.8,labRow=as.character(lapply(results_for_boxplot,function(df) return(df$V8))$RIsearch))
+heatmap.2(tools_result_matrix,Rowv = F,margins = c(10,10),col=colorRampPalette(rev(brewer.pal(n = 7, name = "RdYlBu")))(100), cexCol = 1.8, lhei = c(2, 15),trace="none",key=F,keysize=1,key.title ="",density.info="density",cexRow = 0.5,labRow=as.character(lapply(results_for_boxplot,function(df) return(df$V8))$RIsearch))
 
 par(fig=c(0.2,0.95,0.8,1),xpd=T,mar=c(0,0,0,0)) #c(bottom, left, top, right) 
 mtext("MCC",side=4,xpd=T,outer=F,line=-5,cex = 1.5)
@@ -100,6 +95,11 @@ image.plot(tools_result_matrix,legend.only = T,col=colorRampPalette(rev(brewer.p
 dev.off()
 
 
+pdf("overall.results.pheatmap.pdf",onefile=FALSE,width = 10)
+pheatmap(tools_result_matrix,cluster_rows=FALSE,width = 3,fontsize_col=12)
+
+
+dev.off()
 
 #more stats of predictions
 aggregate(do.call(rbind,results_for_boxplot),by=list(do.call(rbind,results_for_boxplot)$V8),mean)
