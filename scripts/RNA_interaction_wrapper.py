@@ -230,8 +230,10 @@ def RNAup_benchmark(Input_sRNA_File,Input_Target_File,real_region):
     RNA_temp_file.write(">%s\n%s\n>%s\n%s\n" %(str(sRNA.description),str(sRNA.seq),str(RNA.description),str(RNA.seq)))
     RNA_temp_file.close()
 
-    size=abs(real_region[1]-real_region[0]) # for bacteria +5 is enough
-    shell_command="""RNAup -w %d -b -o --interaction_first -3 -5 < %s | gawk 'match($0,/\s+([0-9]+),([0-9]+)\s+:\s+/,m){print m[1],m[2]}'""" %(size,RNA_temp_file.name) #-3 -5 for miRNAs and snoRNAs
+    size=abs(real_region[1]-real_region[0])+5 # for bacteria +5 is enough
+    shell_command="""RNAup -w %d -b -o --interaction_first < %s | gawk 'match($0,/\s+([0-9]+),([0-9]+)\s+:\s+/,m){print m[1],m[2]}'""" %(size,RNA_temp_file.name) #-3 -5 for miRNAs and snoRNAs
+    #shell_command="""RNAup -w %d -b -o --interaction_first -3 -5 < %s | gawk 'match($0,/\s+([0-9]+),([0-9]+)\s+:\s+/,m){print m[1],m[2]}'""" %(size,RNA_temp_file.name) #-3 -5 for miRNAs and snoRNAs
+
     predicted_region=subprocess.check_output(shell_command,shell=True)
 
 
@@ -493,7 +495,6 @@ def ractip_benchmark(Input_sRNA_File,Input_Target_File,real_region):
 
     shell_command="""ractip %s %s | tail -n 1""" %(sRNA_temp_file.name,RNA_temp_file.name)
 
-
     predicted_region=subprocess.check_output(shell_command,shell=True)
 
 
@@ -522,7 +523,6 @@ def bistarna_benchmark(Input_sRNA_File,Input_Target_File,real_region):
     RNA_temp_file.close()
 
     shell_command="""bistarna %s | grep ']'""" %(RNA_temp_file.name)
-
 
     predicted_region=subprocess.check_output(shell_command,shell=True)
 
@@ -589,6 +589,39 @@ def AccessFold_benchmark(Input_sRNA_File,Input_Target_File,real_region):
     return
 
 
+def NUPACK_benchmark(Input_sRNA_File,Input_Target_File,real_region):
+    sRNA=SeqIO.parse(Input_sRNA_File,"fasta").next()
+    RNA=SeqIO.parse(Input_Target_File,"fasta").next()
+
+    RNA_temp_file=tempfile.NamedTemporaryFile(prefix='Nupack_RNA_',suffix='.in',mode="w+",delete=False)
+    RNA_temp_file.write("2\n%s\n%s\n1 2\n" %(str(sRNA.seq),str(RNA.seq)))
+    RNA_temp_file.close()
+
+    shell_command="""mfe -multi -material rna %s && cat %s.mfe | grep -v ^%% | grep '(' | cut -d'+' -f2 """ % (RNA_temp_file.name[:-3],RNA_temp_file.name[:-3])
+
+    predicted_region=subprocess.check_output(shell_command,shell=True)
+
+
+
+    true_base_pairs=set(range(real_region[0],real_region[1]+1))
+    predicted_base_pairs=set(Parse_Dot_Bracket(predicted_region))
+
+    True_Positives=len(true_base_pairs.intersection(predicted_base_pairs))
+    False_Positives=len(predicted_base_pairs.difference(true_base_pairs))
+    False_Negatives=len(true_base_pairs.difference(predicted_base_pairs))
+
+    if True_Positives != 0 or False_Positives != 0:
+        print_results(args.program,True_Positives,False_Positives,False_Negatives)
+    else:
+        print_results(args.program,True_Positives,1,False_Negatives) #add pseudo count for Nupack
+
+    os.remove(RNA_temp_file.name)
+    return
+
+
+
+
+
 
 def Parse_Dot_Bracket(secondary_structure):
     stack=list()
@@ -643,7 +676,8 @@ def main():
                       'ssearch': lambda: ssearch_benchmark(args.sRNA,args.targetRNA,args.window),
                       'ractip': lambda: ractip_benchmark(args.sRNA,args.targetRNA,args.window),
                       'bistarna': lambda: bistarna_benchmark(args.sRNA,args.targetRNA,args.window),
-                      'AccessFold': lambda: AccessFold_benchmark(args.sRNA,args.targetRNA,args.window)
+                      'AccessFold': lambda: AccessFold_benchmark(args.sRNA,args.targetRNA,args.window),
+                      'NUPACK': lambda: NUPACK_benchmark(args.sRNA,args.targetRNA,args.window)
 
                         }
 
@@ -659,7 +693,7 @@ if __name__ == '__main__':
     Argument_Parser=argparse.ArgumentParser(prog="RNA_interaction_wrapper.py")
     Argument_Parser.add_argument('-program',type=str,help="Program to run",choices=['RIsearch','IntaRNA','RNAplex','RNAcofold',
                                                                                     'pairfold','RNAup','RNAduplex','RNAhybrid','bifold','DuplexFold','ssearch','ractip',
-                                                                                    'bistarna','AccessFold'],required=True)
+                                                                                    'bistarna','AccessFold','NUPACK'],required=True)
     Argument_Parser.add_argument('-sRNA',type=str,help="Small RNA file/miRNA etc.",required=True)
     Argument_Parser.add_argument('-targetRNA',type=str,help="Target RNA file/mRNAs/UTRs etc.",required=True)
     Argument_Parser.add_argument('-window',type=int,nargs=2,help="Target interaction region, from start to stop",required=True)

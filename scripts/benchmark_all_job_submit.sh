@@ -12,18 +12,21 @@
 # $4 window stop
 
 
-for i in RIsearch IntaRNA RNAplex RNAcofold RNAup RNAduplex RNAhybrid pairfold DuplexFold bifold ssearch ractip bistarna AccessFold;
+for i in RIsearch IntaRNA RNAplex RNAcofold RNAup RNAduplex RNAhybrid pairfold DuplexFold bifold ssearch ractip bistarna AccessFold NUPACK;
 
-do 
-RNA_interaction_wrapper.py -s $1 -t $2 -w $3 $4 -program $i;
+#for i in NUPACK;
 
-done | grep -v Algorithm > $1.$2.output.csv;
+
+#do 
+#RNA_interaction_wrapper.py -s $1 -t $2 -w $3 $4 -program $i;
+
+#done | grep -v Algorithm >> $1.$2.output.csv;
 
 #for i in ractip bistarna;
 
 #for i in RIsearch IntaRNA RNAplex RNAcofold RNAup RNAduplex RNAhybrid pairfold DuplexFold bifold ssearch ractip bistarna AccessFold;
 
-#do 
-#{ /usr/bin/time --quiet -f "$i\t%e" RNA_interaction_wrapper.py -s $1 -t $2 -w $3 $4 -program $i > /dev/null;};
+do 
+{ /usr/bin/time --quiet -f "$i\t%e" RNA_interaction_wrapper.py -s $1 -t $2 -w $3 $4 -program $i > /dev/null;};
 
-#done;
+done;
