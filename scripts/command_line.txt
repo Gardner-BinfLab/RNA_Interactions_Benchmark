@@ -1,0 +1,47 @@
+RIsearch:
+RIsearch -q INPUT_FILE -t INPUT_FILE -d 30 -p2
+
+IntaRNA:
+IntaRNA -m INPUT_FILE -t INPUT_FILE -w 32 -o
+
+RNAplex:
+RNAplex -l %d -q INPUT_FILE -t INPUT_FILE -a ./ 
+RNAplfold -W %d -u %d -O --plex_output < INPUT_FILE
+RNAplfold -W %d -u %d -O --plex_output < INPUT_FILE
+
+RNAcofold:
+RNAcofold --noPS < INPUT_FILE
+
+pairfold:
+pairfold INPUT_FILE INPUT_FILE -m RNA
+
+RNAup
+RNAup -w %d -b -o -3 -5 --interaction_first < INPUT_FILE
+
+RNAduplex:
+RNAduplex --noLP < INPUT_FILE 
+
+RNAhybrid:
+RNAhybrid -q INPUT_FILE -t INPUT_FILE -d 0 1 -n 10000 -m 10000
+
+bifold:
+bifold -m 1 INPUT_FILE INPUT_FILE INPUT_FILE
+
+DuplexFold:
+DuplexFold -m 1 INPUT_FILE INPUT_FILE INPUT_FILE
+
+ssearch:
+ssearch36 -s 'rna.mat' INPUT_FILE INPUT_FILE -m 8C
+
+ractip:
+ractip INPUT_FILE INPUT_FILE 
+
+bistarna:
+bistarna INPUT_FILE
+
+AccessFold:
+AccessFold -m 1 INPUT_FILE INPUT_FILE INPUT_FILE
+
+NUPACK:
+mfe -multi -material rna INPUT_FILE
+
