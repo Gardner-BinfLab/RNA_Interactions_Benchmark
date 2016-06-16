@@ -1,6 +1,6 @@
 #A comprehensive benchmark of RNA-RNA interaction prediction tools for all domains of life
 
-Sinan Uğur Umu<sup>1,2,*</sup> and Paul P. Gardner <sup>1,2,3</sup>
+Sinan Uğur Umu <sup>1,2,*</sup> and Paul P. Gardner <sup>1,2,3</sup>
 
 
 <sup>1</sup>School of Biological Sciences, University of Canterbury, Christchurch, New Zealand.  
