@@ -9,5 +9,7 @@ Sinan Uğur Umu <sup>1,2,*</sup> and Paul P. Gardner <sup>1,2,3</sup>
 
 *To whom correspondence should be addressed.
 
+sinan.umu@pg.canterbury.ac.nz  
+sinanugur@gmail.com  
 
 RNA-RNA interactions benchmark scripts and wrappers.  
