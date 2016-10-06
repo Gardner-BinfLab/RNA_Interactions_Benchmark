@@ -1,23 +1,23 @@
-Tools,Included,Type,Reference,Version,Reason to exclude
-AccessFold,Yes,MFE (include accessibility),http://rna.urmc.rochester.edu/RNAstructureDownload.html,5.6,
-bifold,Yes,MFE (include intra-structure),http://rna.urmc.rochester.edu/RNAstructureDownload.html,5.6,
-bistarna,Yes,MFE (include accessibility),http://www.ncbi.nlm.nih.gov/pubmed/22084009,Benchmarked version created on 2010-09-24,
-DuplexFold,Yes,MFE,http://rna.urmc.rochester.edu/RNAstructureDownload.html,5.6,
-IntaRNA,Yes,MFE (include accessibility),http://bioinformatics.oxfordjournals.org/content/24/24/2849,1.2.5,
-Pairfold,Yes,MFE (include intra-structure),http://nar.oxfordjournals.org/content/31/13/3416.long - http://www.sciencedirect.com/science/article/pii/S0022283604014032,2,
-RactIP,Yes,Integer programming (includes intra-structure),http://bioinformatics.oxfordjournals.org/content/26/18/i460.short,0.0.2,
-RIsearch,Yes,Alignment-like,http://bioinformatics.oxfordjournals.org/cgi/content/long/28/21/2738,1.1,
-RNAcofold,Yes,MFE (include intra-structure),http://www.almob.org/content/1/1/3 -  http://link.springer.com/10.1007/BF00818163,2.1.9,
-RNAduplex,Yes,MFE,http://www.pubmedcentral.nih.gov/articlerender.fcgi?artid=3319429&tool=pmcentrez&rendertype=abstract,2.1.9,
-RNAhybrid,Yes,MFE,http://nar.oxfordjournals.org/content/34/suppl_2/W451.full - http://rnajournal.cshlp.org/content/10/10/1507.abstract,2.1.9,
-RNAplex,Yes,MFE (include accessibility),http://bioinformatics.oxfordjournals.org/content/24/22/2657.long,2.1.9,
-RNAup,Yes,MFE (include accessibility),http://bioinformatics.oxfordjournals.org/content/22/10/1177.long,2.1.9,
-Ssearch,Yes,Alignment,http://www.pubmedcentral.nih.gov/articlerender.fcgi?artid=280013&tool=pmcentrez&rendertype=abstract,36.3.6,
-NUPACK,Yes,MFE (include intra-structure),http://epubs.siam.org/doi/abs/10.1137/060651100,3.0.5,
-PETCOFOLD,No,,http://www.ncbi.nlm.nih.gov/pubmed/21088024,,Comparative
-IRIS,No,,http://www.ncbi.nlm.nih.gov/pubmed/15706495,,Obsolote
-inteRNA,No,,http://www.ncbi.nlm.nih.gov/pubmed/16597239,,Not working
-birna,No,,http://link.springer.com/chapter/10.1007%2F978-3-642-04241-6_3,,Not working
-pirna,No,,http://compbio.cs.sfu.ca/nwp-content/software/taverna/pirna/,,Not working
-BINDIGO,No,,http://nar.oxfordjournals.org/content/32/22/6636.abstract,,Only web server/restrictive
-Guugle,No,,http://bioinformatics.oxfordjournals.org/content/22/6/762.long,,Not reporting scores
+Tools,Included,Type,Reference,Version,Reason to exclude,Note
+AccessFold,Yes,MFE (include accessibility),http://rna.urmc.rochester.edu/RNAstructureDownload.html,5.6,,
+bifold,Yes,MFE (include intra-structure),http://rna.urmc.rochester.edu/RNAstructureDownload.html,5.6,,
+bistarna,Yes,MFE (include accessibility),http://www.ncbi.nlm.nih.gov/pubmed/22084009,Benchmarked version created on 2010-09-24,,
+DuplexFold,Yes,MFE,http://rna.urmc.rochester.edu/RNAstructureDownload.html,5.6,,
+IntaRNA,Yes,MFE (include accessibility),http://bioinformatics.oxfordjournals.org/content/24/24/2849,1.2.5,,
+Pairfold,Yes,MFE (include intra-structure),http://nar.oxfordjournals.org/content/31/13/3416.long - http://www.sciencedirect.com/science/article/pii/S0022283604014032,2,,
+RactIP,Yes,Integer programming (includes intra-structure),http://bioinformatics.oxfordjournals.org/content/26/18/i460.short,0.0.2,,
+RIsearch,Yes,Alignment-like,http://bioinformatics.oxfordjournals.org/cgi/content/long/28/21/2738,1.1,,
+RNAcofold,Yes,MFE (include intra-structure),http://www.almob.org/content/1/1/3 -  http://link.springer.com/10.1007/BF00818163,2.1.9,,
+RNAduplex,Yes,MFE,http://www.pubmedcentral.nih.gov/articlerender.fcgi?artid=3319429&tool=pmcentrez&rendertype=abstract,2.1.9,,
+RNAhybrid,Yes,MFE,http://nar.oxfordjournals.org/content/34/suppl_2/W451.full - http://rnajournal.cshlp.org/content/10/10/1507.abstract,2.1.9,,
+RNAplex,Yes,MFE (include accessibility),http://bioinformatics.oxfordjournals.org/content/24/22/2657.long,2.1.9,,
+RNAup,Yes,MFE (include accessibility),http://bioinformatics.oxfordjournals.org/content/22/10/1177.long,2.1.9,,
+Ssearch,Yes,Alignment,http://www.pubmedcentral.nih.gov/articlerender.fcgi?artid=280013&tool=pmcentrez&rendertype=abstract,36.3.6,,
+NUPACK,Yes,MFE (include intra-structure),http://epubs.siam.org/doi/abs/10.1137/060651100,3.0.5,,
+PETCOFOLD,No,,http://www.ncbi.nlm.nih.gov/pubmed/21088024,,Comparative,
+IRIS,No,,http://www.ncbi.nlm.nih.gov/pubmed/15706495,,Obsolote,We contacted the author via pervouchine@gmail.com
+inteRNA,No,,http://www.ncbi.nlm.nih.gov/pubmed/16597239,,Not working,We sent an email to cenk@sfu.ca but no response.
+birna,No,,http://link.springer.com/chapter/10.1007%2F978-3-642-04241-6_3,,Not working,We sent an email to cenk@sfu.ca but no response.
+pirna,No,,http://compbio.cs.sfu.ca/nwp-content/software/taverna/pirna/,,Not working,We sent an email to cenk@sfu.ca but no response.
+BINDIGO,No,,http://nar.oxfordjournals.org/content/32/22/6636.abstract,,Only web server/restrictive,
+Guugle,No,,http://bioinformatics.oxfordjournals.org/content/22/6/762.long,,Not reporting scores,
