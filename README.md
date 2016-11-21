@@ -13,3 +13,6 @@ sinan.umu@pg.canterbury.ac.nz
 sinanugur@gmail.com  
 
 RNA-RNA interactions benchmark scripts and wrappers.  
+
+To cite :  
+10.1093/bioinformatics/btw728  
