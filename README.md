@@ -15,4 +15,4 @@ sinanugur@gmail.com
 RNA-RNA interactions benchmark scripts and wrappers.  
 
 To cite :  
-10.1093/bioinformatics/btw728  
+http://dx.doi.org/10.1093/bioinformatics/btw728  
