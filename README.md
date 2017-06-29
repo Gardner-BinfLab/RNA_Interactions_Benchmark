@@ -1,4 +1,7 @@
-#A comprehensive benchmark of RNA-RNA interaction prediction tools for all domains of life
+# A comprehensive benchmark of RNA-RNA interaction prediction tools for all domains of life
+
+[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
+
 
 Sinan Uğur Umu <sup>1,2,*</sup> and Paul P. Gardner <sup>1,2,3</sup>
 
